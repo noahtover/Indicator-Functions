@@ -1,4 +1,4 @@
-# This function identifies bullish and bearish engulfing candles by determining if the current candle is a specificed % higher than the previous one.
+# This function identifies bullish and bearish engulfing candles by determining if the current candle is a specificed % larger than the previous one.
 # An engulfing candle is a positive candlestick than is significantly larger than the previous negative candlestick.
 engulfing_candle <- function(x, pct_change = .04){
  if(is.OC(x) == FALSE)
