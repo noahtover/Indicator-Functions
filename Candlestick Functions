@@ -12,3 +12,32 @@ engulfing_candle <- function(x, pct_change = .04){
   colnames(engulfing) <- c('bullish_engulfing', 'bearish_engulfing')
   return(engulfing)
 }
+########################################
+# This function identifies a series of consecutive green (positive) or red (negative) candlesticks. The count argument specifies the number of consecutive candles to search for.
+consecutive_candles <- function(x, count = 3, type = c('green', 'red')){
+  if(is.OC(x) == FALSE){
+    stop('This function requires the open and close columns!')
+  }
+  count <- count - 1
+  lags <- stats::lag(OHLC(x), k = 0:count)
+  opens <- Op(lags)
+  closes <- Cl(lags)
+  diff <- opens - closes
+  if(type == 'green'){
+    diff$greenconsecutive <- NA
+      for(i in 1:nrow(diff)){
+        diff[i, 'greenconsecutive'] <- all(diff[i, 1:ncol(diff) - 1] < 0)
+      }
+    greenconsecutive <- ifelse(diff$greenconsecutive == 1, yes = TRUE, no = FALSE)
+    return(greenconsecutive)
+  }
+  if(type == 'red'){
+    diff$redconsecutive <- NA
+      for(i in 1:nrow(diff)){
+        diff[i, 'redconsecutive'] <- all(diff[i, 1:ncol(diff) - 1] > 0)
+      }
+    redconsecutive <- ifelse(diff$redconsecutive == 1, yes = TRUE, no = FALSE)
+    return(redconsecutive)
+  }
+}
+############################################
