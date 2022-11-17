@@ -41,19 +41,4 @@ consecutive_candles <- function(x, count = 3, type = c('green', 'red')){
   }
 }
 ############################################
-# This function builds off the trend direction channel indicator of the candlesticks package. It utilizes the donachion channel to identify trending & ranging markets
-# The indicator I built improves upon it by finding the percent of signals produced for each trend in the past n days. 
-library(candlesticks)
-direction_confidence <- function(x, n = 30, testlookback = 126, DCSector = 1/8){
-  trend_test <- TrendDetectionChannel(TS = OHLC(x), n = testlookback, DCSector = DCSector)
-  upsums <- runSum(trend_test$UpTrend, n = n)
-  downsums <- runSum(trend_test$DownTrend, n = n)
-  nosums <- runSum(trend_test$NoTrend, n = n)
-  uptrend <- upsums / n
-  downtrend <- downsums / n
-  notrend <- nosums / n
-  confidence <- cbind(uptrend, notrend, downtrend)
-  colnames(confidence) <- c('uptrend', 'downtrend', 'notrend')
-  return(confidence)
-}
-############################################
+
