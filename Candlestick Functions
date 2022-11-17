@@ -1,0 +1,14 @@
+# This function identifies bullish and bearish engulfing candles by determining if the current candle is a specificed % higher than the previous one.
+# An engulfing candle is a positive candlestick than is significantly larger than the previous negative candlestick.
+engulfing_candle <- function(x, pct_change = .04){
+ if(is.OC(x) == FALSE)
+   stop('This function requires the open and close columns!')
+  lags <- stats::lag(OHLC(x))
+  pct_diff <- ((Cl(x) - Op(x)) - (Op(lags) - Cl(lags))) / (Op(lags) - Cl(lags))
+  bearish_pct_diff <- ((Op(x) - Cl(x)) - (Cl(lags) - Op(lags))) / (Cl(lags) - Op(lags))
+  bullish_engulfing <- ifelse(Op(lags) > Cl(lags) & Op(x) < Cl(x) & pct_diff >= pct_change, yes = TRUE, no = FALSE)
+  bearish_engulfing <- ifelse(Op(lags) < Cl(lags) & Op(x) > Cl(x) & bearish_pct_diff >= pct_change, yes = TRUE, no = FALSE)
+  engulfing <- cbind(bullish_engulfing, bearish_engulfing)
+  colnames(engulfing) <- c('bullish_engulfing', 'bearish_engulfing')
+  return(engulfing)
+}
